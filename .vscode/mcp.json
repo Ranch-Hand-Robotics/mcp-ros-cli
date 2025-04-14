@@ -1,0 +1,8 @@
+{
+    "servers": {
+        "ros2": {
+            "type": "sse",
+            "url": "http://localhost:3002/sse"
+        }
+    }
+}
