@@ -1,0 +1,98 @@
+# ROS2 Command Reference - Simplified
+
+## Action Commands
+ros2 action info <action_name>       # Print information about an action
+ros2 action list                     # Output a list of action names
+ros2 action send_goal <action_name> <action_type> <goal> # Send an action goal
+
+## Bag Commands
+ros2 bag convert                     # Convert bag format
+ros2 bag info <bag_path>             # Print information about a bag
+ros2 bag list                        # Print available plugins
+ros2 bag play <bag_path>             # Play back ROS data from a bag
+ros2 bag record [topics...]          # Record ROS data to a bag
+ros2 bag reindex <bag_path>          # Reconstruct metadata file for a bag
+
+## Component Commands
+ros2 component list                  # List running containers and components
+ros2 component load                  # Load a component into a container node
+ros2 component standalone            # Run component in standalone container
+ros2 component types                 # List registered components
+ros2 component unload                # Unload a component from a container
+
+## Daemon Commands
+ros2 daemon start                    # Start the daemon
+ros2 daemon status                   # Output daemon status
+ros2 daemon stop                     # Stop the daemon
+
+## Doctor Commands
+ros2 doctor                          # Check ROS setup and issues
+ros2 doctor hello                    # Check network connectivity
+
+## Interface Commands
+ros2 interface list                  # List all interface types
+ros2 interface package               # List interfaces in a package
+ros2 interface packages              # List packages with interfaces
+ros2 interface proto                 # Output interface prototype
+ros2 interface show                  # Show interface definition
+
+## Launch Commands
+ros2 launch <package_name> <launch_file_name> # Run a launch file
+
+## Lifecycle Commands
+ros2 lifecycle get                   # Get lifecycle state for nodes
+ros2 lifecycle list                  # List available transitions
+ros2 lifecycle nodes                 # List nodes with lifecycle
+ros2 lifecycle set                   # Trigger lifecycle state transition
+
+## Multicast Commands
+ros2 multicast receive               # Receive UDP multicast packet
+ros2 multicast send                  # Send UDP multicast packet
+
+## Node Commands
+ros2 node info <node_name>           # Show information about a node
+ros2 node list                       # List available nodes
+
+## Parameter Commands
+ros2 param delete                    # Delete parameter
+ros2 param describe                  # Show parameter information
+ros2 param dump                      # Show node parameters in YAML format
+ros2 param get                       # Get parameter value
+ros2 param list                      # List available parameters
+ros2 param load                      # Load parameter file for a node
+ros2 param set                       # Set parameter value
+
+## Package Commands
+ros2 pkg create                      # Create a new ROS 2 package
+ros2 pkg executables                 # List package executables
+ros2 pkg list                        # List available packages
+ros2 pkg prefix                      # Output package prefix path
+ros2 pkg xml                         # Output package manifest XML
+
+## Run Command
+ros2 run <package_name> <executable_name> # Run package executable
+
+## Security Commands
+ros2 security create_enclave         # Create security enclave
+ros2 security create_keystore        # Create keystore
+ros2 security create_permission      # Create permission
+ros2 security generate_artifacts     # Generate security files
+ros2 security generate_policy        # Generate XML policy file
+ros2 security list_enclaves          # List enclaves in keystore
+
+## Service Commands
+ros2 service call                    # Call a service
+ros2 service find                    # Find services of a given type
+ros2 service list                    # List available services
+ros2 service type                    # Show service type
+
+## Topic Commands
+ros2 topic bw                        # Display topic bandwidth
+ros2 topic delay                     # Show topic delay from timestamp
+ros2 topic echo                      # Output messages from a topic
+ros2 topic find                      # Find topics of given type
+ros2 topic hz                        # Print publishing rate
+ros2 topic info                      # Print topic information
+ros2 topic list                      # List available topics
+ros2 topic pub                       # Publish message to a topic
+ros2 topic type                      # Print topic type
