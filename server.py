@@ -1088,3 +1088,4 @@ if __name__ == "__main__":
     print(f"* SSE streaming is enabled")
     print(f"{'*' * 70}\n")
     mcp.run("sse")
+    
