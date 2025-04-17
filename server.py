@@ -1080,6 +1080,132 @@ async def kill_process(pid: int) -> Dict[str, Any]:
             "status": str(e)
         }
 
+# --- Doctor Commands ---
+
+@mcp.tool()
+async def run_doctor(report: bool = False, include_warnings: bool = True) -> Dict[str, Any]:
+    """
+    Run ROS 2 doctor to check system and ROS 2 setup
+    
+    Args:
+        report: Whether to generate a full report (default: False)
+        include_warnings: Whether to include warnings in the output (default: True)
+        
+    Returns:
+        Dictionary with diagnostic results
+    """
+    cmd = ["ros2", "doctor"]
+    
+    if report:
+        cmd.append("--report")
+        
+    if not include_warnings:
+        cmd.append("--include-warnings=0")
+    
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    
+    # Parse the output
+    output = result.stdout.strip()
+    error_output = result.stderr.strip()
+    
+    # Check if there were errors
+    if result.returncode != 0 and not output:
+        raise RuntimeError(f"ROS 2 doctor failed: {error_output}")
+    
+    # Process the doctor output
+    checks = []
+    current_check = None
+    
+    for line in output.split('\n'):
+        if not line:
+            continue
+            
+        if line.startswith('['):
+            # This is a check result line
+            status = line.split(']')[0].strip('[]')
+            name = line.split(']', 1)[1].strip()
+            
+            current_check = {
+                "name": name,
+                "status": status,
+                "details": []
+            }
+            checks.append(current_check)
+        elif current_check and line.strip():
+            # This is a detail line for the current check
+            current_check["details"].append(line.strip())
+    
+    # Determine overall status
+    overall_status = "pass"
+    for check in checks:
+        if check["status"].lower() == "error":
+            overall_status = "error"
+            break
+        elif check["status"].lower() == "warning" and overall_status != "error":
+            overall_status = "warning"
+    
+    return {
+        "success": result.returncode == 0,
+        "overall_status": overall_status,
+        "checks": checks,
+        "raw_output": output
+    }
+
+@mcp.tool()
+async def run_doctor_hello() -> str:
+    """
+    Run ROS 2 doctor hello command to check if ROS 2 is installed correctly
+    
+    Returns:
+        Output of the hello command
+    """
+    result = subprocess.run(["ros2", "doctor", "hello"], 
+                           capture_output=True, text=True)
+    
+    if result.returncode != 0:
+        raise RuntimeError(f"ROS 2 doctor hello failed: {result.stderr}")
+    
+    return result.stdout.strip()
+
+@mcp.tool()
+async def run_doctor_wtf() -> Dict[str, Any]:
+    """
+    Run ROS 2 doctor wtf command to get detailed system information
+    
+    Returns:
+        Detailed system information in a structured format
+    """
+    result = subprocess.run(["ros2", "doctor", "wtf"], 
+                           capture_output=True, text=True)
+    
+    # The wtf command might have a non-zero return code but still output useful information
+    output = result.stdout.strip()
+    
+    # Parse the output into sections
+    sections = {}
+    current_section = None
+    current_content = []
+    
+    for line in output.split('\n'):
+        if line.startswith('===') and line.endswith('==='):
+            # This is a section header
+            if current_section:
+                sections[current_section] = '\n'.join(current_content)
+                current_content = []
+            
+            current_section = line.strip('=').strip()
+        elif current_section:
+            current_content.append(line)
+    
+    # Don't forget the last section
+    if current_section:
+        sections[current_section] = '\n'.join(current_content)
+    
+    return {
+        "success": True,
+        "sections": sections,
+        "raw_output": output
+    }
 
 if __name__ == "__main__":
     logger.info(f"[Setup] Starting MCP-ROS2 server with SSE enabled on port {mcp.settings.port}")
@@ -1088,4 +1214,3 @@ if __name__ == "__main__":
     print(f"* SSE streaming is enabled")
     print(f"{'*' * 70}\n")
     mcp.run("sse")
-    
